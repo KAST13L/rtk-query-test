@@ -36,9 +36,6 @@ export const App: FC = ({}) => {
   if (isLoading) {
     return <div>Loading...</div>;
   }
-  if (!data) {
-    return <div>No data :(</div>;
-  }
 
   return (
     <>
@@ -59,7 +56,7 @@ export const App: FC = ({}) => {
         <button onClick={handleAddProduct}>+</button>
       </div>
       <ul>
-        {data.map((item: any) => (
+        {data && data.map((item: ITodo) => (
           <li key={item.id}>
             {item.name}
             <button onClick={() => handleDeleteProduct(item.id)}>x</button>
