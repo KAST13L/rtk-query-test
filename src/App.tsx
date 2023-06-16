@@ -3,14 +3,18 @@ import {
   useAddProductMutation,
   useDeleteProductMutation,
   useGetGoodsQuery,
+  useUpdateProductMutation,
 } from "./redux/goodsApi.ts";
+import { ITodo } from "./types/types.ts";
 
 export const App: FC = ({}) => {
   const [count, setCount] = useState<string>("");
   const [title, setTitle] = useState<string>("");
+
   const { data, isError, isLoading } = useGetGoodsQuery(count);
   const [addProduct] = useAddProductMutation();
   const [deleteProduct] = useDeleteProductMutation();
+  const [updateProduct] = useUpdateProductMutation();
 
   const handleAddProduct = async () => {
     if (title) {
@@ -21,12 +25,19 @@ export const App: FC = ({}) => {
   const handleDeleteProduct = async (id: number) => {
     await deleteProduct(id);
   };
+  const handleUpdateProduct = async (todo: ITodo) => {
+    const newName = prompt();
+    await updateProduct({ ...todo, name: newName });
+  };
 
   if (isError) {
     return <div>Oops, something wrong...</div>;
   }
   if (isLoading) {
     return <div>Loading...</div>;
+  }
+  if (!data) {
+    return <div>No data :(</div>;
   }
 
   return (
@@ -52,6 +63,7 @@ export const App: FC = ({}) => {
           <li key={item.id}>
             {item.name}
             <button onClick={() => handleDeleteProduct(item.id)}>x</button>
+            <button onClick={() => handleUpdateProduct(item)}>change</button>
           </li>
         ))}
       </ul>
